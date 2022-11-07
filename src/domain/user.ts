@@ -1,9 +1,9 @@
-interface IUser {
+export interface IUser {
   id: number;
   name: string;
 }
 
-class User {
+export class User {
   private readonly id: number;
   private name: string;
 

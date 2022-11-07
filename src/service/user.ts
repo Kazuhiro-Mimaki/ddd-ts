@@ -1,4 +1,13 @@
-class UserService {
+import { User } from "../domain";
+import { IUserRepository } from "../repository/user";
+
+interface IUserService {
+  userRepository: IUserRepository;
+}
+
+export class UserService {
+  private userRepository: IUserRepository;
+
   public exists(user: User) {
     // 重複を確認する処理
   }
