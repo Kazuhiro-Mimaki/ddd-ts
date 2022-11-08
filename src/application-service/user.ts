@@ -1,4 +1,5 @@
 import { User } from "../domain";
+import { UserData } from "../dto";
 import { IUserRepository } from "../repository";
 import { InMemoryUserRepository } from "../repository/user";
 import { UserService } from "../service";
@@ -22,10 +23,18 @@ export class UserApplicationService {
       id: 1,
       name: "sample",
     });
-    if (this.userService.exists(user)) {
+    if (user && this.userService.exists(user)) {
       throw Error(`${user}: ユーザーは既に存在しています`);
     }
     this.userRepository.save(user);
+  }
+
+  public get(userId: number): UserData {
+    const user = this.userRepository.findById(userId);
+    if (!user) {
+      throw Error(`${userId}: ユーザーが存在しません`);
+    }
+    return new UserData(user);
   }
 }
 
