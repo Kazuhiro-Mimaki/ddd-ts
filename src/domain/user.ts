@@ -4,8 +4,8 @@ export interface IUser {
 }
 
 export class User {
-  private readonly id: number;
-  private name: string;
+  public readonly id: number;
+  public name: string;
 
   constructor(_user: IUser) {
     this.id = _user.id;

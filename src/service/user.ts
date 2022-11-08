@@ -1,15 +1,20 @@
 import { User } from "../domain";
-import { IUserRepository } from "../repository/user";
+import { InMemoryUserRepository, IUserRepository } from "../repository/user";
 
-interface IUserService {
+export interface IUserService {
   userRepository: IUserRepository;
 }
 
 export class UserService {
   private userRepository: IUserRepository;
 
-  public exists(user: User) {
-    // 重複を確認する処理
+  constructor(_userService: IUserService) {
+    this.userRepository = _userService.userRepository;
+  }
+
+  public exists(user: User): boolean {
+    const duplicatedUser = this.userRepository.findByName(user.name);
+    return !!duplicatedUser;
   }
 }
 
@@ -17,7 +22,9 @@ export class UserService {
 // 具体的な処理
 // -----
 
-const userService = new UserService();
+const userService = new UserService({
+  userRepository: new InMemoryUserRepository(),
+});
 
 const user = new User({
   id: 1,
