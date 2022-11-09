@@ -13,7 +13,7 @@ export class UserService {
   }
 
   public exists(user: User): boolean {
-    const duplicatedUser = this.userRepository.findByName(user.name);
+    const duplicatedUser = this.userRepository.findById(user.id);
     return !!duplicatedUser;
   }
 }

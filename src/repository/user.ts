@@ -28,6 +28,15 @@ export class InMemoryUserRepository implements IUserRepository {
   }
 
   public save(user: User): void {
-    this.store.push(user);
+    if (user) {
+      this.store = [...this.store].map((v) => {
+        if (v.id === user.id) {
+          return user;
+        }
+        return v;
+      });
+    } else {
+      this.store.push(user);
+    }
   }
 }

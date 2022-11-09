@@ -1,4 +1,4 @@
-import { User } from "../domain";
+import { IUser, User } from "../domain";
 import { UserData } from "../dto";
 import { IUserRepository } from "../repository";
 import { InMemoryUserRepository } from "../repository/user";
@@ -29,12 +29,19 @@ export class UserApplicationService {
     this.userRepository.save(user);
   }
 
-  public get(userId: number): UserData {
+  public get(userId: number): UserData | null {
     const user = this.userRepository.findById(userId);
-    if (!user) {
-      throw Error(`${userId}: ユーザーが存在しません`);
-    }
+    if (!user) return null;
     return new UserData(user);
+  }
+
+  public update(updateUser: IUser): void {
+    const user = this.userRepository.findById(updateUser.id);
+    if (!user) {
+      throw Error(`${updateUser}: ユーザーが存在しません`);
+    }
+    const newUser = user.changeName(updateUser.name);
+    this.userRepository.save(newUser);
   }
 }
 
