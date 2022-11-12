@@ -1,9 +1,11 @@
-import { User } from "../domain";
+import { User } from "./user";
+import { UserId } from "./userId";
+import { UserName } from "./userName";
 
 export interface IUserRepository {
   save(user: User): void;
-  findByName(userName: string): User | undefined;
-  findById(userId: number): User | undefined;
+  findByName(userName: UserName): User | undefined;
+  findById(userId: UserId): User | undefined;
 }
 
 export class InMemoryUserRepository implements IUserRepository {
@@ -15,15 +17,15 @@ export class InMemoryUserRepository implements IUserRepository {
 
   private init(): User[] {
     return Array.from(Array(10), (v) => {
-      return new User({ id: v, name: `User${v}` });
+      return User.init(new UserName(`${v}user`));
     });
   }
 
-  public findByName(userName: string): User | undefined {
+  public findByName(userName: UserName): User | undefined {
     return this.store.find((v) => v.name === userName);
   }
 
-  public findById(userId: number): User | undefined {
+  public findById(userId: UserId): User | undefined {
     return this.store.find((v) => v.id === userId);
   }
 

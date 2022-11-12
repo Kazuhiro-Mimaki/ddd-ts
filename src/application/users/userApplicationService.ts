@@ -1,8 +1,12 @@
-import { IUser, User } from "../domain";
-import { UserData } from "../dto";
-import { IUserRepository } from "../repository";
-import { InMemoryUserRepository } from "../repository/user";
-import { UserService } from "../service";
+import {
+  IUser,
+  IUserRepository,
+  User,
+  UserId,
+  UserName,
+} from "../../domain/models";
+import { UserService } from "../../domain/services";
+import { UserData } from "./userData";
 
 export interface IUserApplicationService {
   userRepository: IUserRepository;
@@ -19,18 +23,15 @@ export class UserApplicationService {
   }
 
   public register(name: string) {
-    const user = new User({
-      id: 1,
-      name: "sample",
-    });
+    const user = User.init(new UserName(name));
     if (user && this.userService.exists(user)) {
       throw Error(`${user}: ユーザーは既に存在しています`);
     }
     this.userRepository.save(user);
   }
 
-  public get(userId: number): UserData | null {
-    const user = this.userRepository.findById(userId);
+  public get(userId: string): UserData | null {
+    const user = this.userRepository.findById(new UserId(userId));
     if (!user) return null;
     return new UserData(user);
   }
@@ -44,18 +45,3 @@ export class UserApplicationService {
     this.userRepository.save(newUser);
   }
 }
-
-// -----
-// 具体的な処理
-// -----
-
-const userService = new UserService({
-  userRepository: new InMemoryUserRepository(),
-});
-
-const user = new User({
-  id: 1,
-  name: "sample",
-});
-
-userService.exists(user);
